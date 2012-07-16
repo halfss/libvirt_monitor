@@ -1,0 +1,63 @@
+脚本的运行的前提，需要打开libvirt的监听
+
+ubuntu下如下设置：
+openstack的官网文档中有介绍：
+/etc/libvirt/libvirt.conf:
+
+	before : #listen_tls = 0
+	after : listen_tls = 0
+
+	before : #listen_tcp = 1
+	after : listen_tcp = 1
+
+	add: auth_tcp = "none"
+
+
+	listen_addr = "localhost"  #这个是我们加的，仅仅监听本机
+                            
+Modify /etc/init/libvirt-bin.conf
+
+	before : exec /usr/sbin/libvirtd -d
+	after : exec /usr/sbin/libvirtd -d -l
+                            
+Modify /etc/default/libvirt-bin
+
+	before :libvirtd_opts=" -d"
+	after :libvirtd_opts=" -d -l"
+                            
+then, restart libvirt. Make sure libvirt is restarted.
+
+# stop libvirt-bin && start libvirt-bin
+# ps -ef | grep libvirt
+root 1145 1 0 Nov27 ? 00:00:03 /usr/sbin/libvirtd -d -l
+
+
+
+
+数据库的表结构：
+
+
+desc instance;
++-------------+-----------+------+-----+---------+----------------+
+| Field       | Type      | Null | Key | Default | Extra          |
++-------------+-----------+------+-----+---------+----------------+
+| id          | int(11)   | NO   | PRI | NULL    | auto_increment |
+| instance_id | int(7)    | YES  |     | NULL    |                |
+| timestamp   | char(15)  | YES  |     | NULL    |                |
+| cpu         | char(5)   | YES  |     | NULL    |                |
+| mem         | char(5)   | YES  |     | NULL    |                |
+| disk        | char(100) | YES  |     | NULL    |                |
+| net         | char(100) | YES  |     | NULL    |                |
++-------------+-----------+------+-----+---------+----------------+
+7 rows in set (0.00 sec)
+
+
+脚本输出的对应关系：
+
+('264','1329187275.52','0.249','10.34',' vda-0.206-0.0-0.0-37580963840::vdb-0.004-0.0-0.0-85899345920::',' vnet12-468-0-3288953-0::vnet13-0-0-36090-0::')
+('instance_id','timestamp','cpu_usage','memory_usage','disk_name-disk_usage-read_speed-write_speed-disk_size::','netcard_name-total_upload-upload_speed-total_download-download_speed')
+
+unit of disk:Kb/s
+ubit of net :Kb/s
+
+'''
