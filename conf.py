@@ -2,10 +2,10 @@
 
 
 #DB_HOST
-db_host="192.168.100.2"
+db_host="localhost"
 #DB_USER
 db_user="monitor"
 #DB_PASSWD
-db_passwd="monitor"
+db_passwd="ihebsjckwofuehrt"
 #DB_NAME
 db="monitor"

@@ -1,30 +1,34 @@
 脚本的运行的前提，需要打开libvirt的监听
 
+centos修改/etc/init.d/libvirtd
+
+  LIBVIRTD_ARGS=-l
+
 ubuntu下如下设置：
-openstack的官网文档中有介绍：
-/etc/libvirt/libvirt.conf:
+    openstack的官网文档中有介绍：
+    /etc/libvirt/libvirt.conf:
 
-	before : #listen_tls = 0
-	after : listen_tls = 0
+    before  : #listen_tls = 0
+    after : listen_tls = 0
 
-	before : #listen_tcp = 1
-	after : listen_tcp = 1
+    before : #listen_tcp = 1
+    afterfter : listen_tcp = 1
 
-	add: auth_tcp = "none"
+    add: auth_tcp = "none"
 
 
-	listen_addr = "localhost"  #这个是我们加的，仅仅监听本机
-                            
-Modify /etc/init/libvirt-bin.conf
+    listen_addr = "localhost"  #这个是我们加的，仅仅监听本机
 
-	before : exec /usr/sbin/libvirtd -d
-	after : exec /usr/sbin/libvirtd -d -l
-                            
-Modify /etc/default/libvirt-bin
+    Modify /etc/init/libvirt-bin.conf
 
-	before :libvirtd_opts=" -d"
-	after :libvirtd_opts=" -d -l"
-                            
+    before : exec /usr/sbin/libvirtd  -d
+    after : exec /usr/sbin/libvirtd -d -l
+
+      Modify /etc/default/libvirt-bin
+
+    before :libvirtd_opts=" -d"
+    after :libvirtibvirtd_opts=" -d -l"
+
 then, restart libvirt. Make sure libvirt is restarted.
 
 # stop libvirt-bin && start libvirt-bin
